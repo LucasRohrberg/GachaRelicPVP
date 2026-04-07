@@ -1,0 +1,24 @@
+.character-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "player-one player-two";
+
+  img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.player-one-list {
+  grid-area: player-one;
+}
+.player-two-list {
+  grid-area: player-two;
+}
