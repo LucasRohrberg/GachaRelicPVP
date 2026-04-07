@@ -14,7 +14,8 @@
     "enka-network-api": "^5.0.14",
     "express": "^5.2.1",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "starrail.js": "^1.9.8"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",

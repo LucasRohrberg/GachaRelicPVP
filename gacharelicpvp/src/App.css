@@ -2,23 +2,44 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "player-one player-two";
+  text-align: center;
 
-  img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
+  .character-item {
+    width: 210px;
+    height: 330px;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.3s ease;
+    margin: 0.2em;
 
     &:hover {
       transform: scale(1.05);
     }
   }
+
+  img {
+    min-width: 140%;
+    min-height: 140%;
+    object-fit: cover;
+  }
+}
+
+.player-one-list,
+.player-two-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .player-one-list {
   grid-area: player-one;
 }
+
 .player-two-list {
   grid-area: player-two;
 }
