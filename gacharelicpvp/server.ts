@@ -10,6 +10,7 @@ const starRail = new StarRail();
 
 app.use(cors());
 app.use(express.json());
+enka.cachedAssetsManager.fetchAllContents();
 
 function getCircularReplacer() {
   const seen = new WeakSet();

@@ -2,21 +2,47 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "player-one player-two";
-  text-align: center;
 
   .character-item {
-    width: 210px;
+    position: relative;
+    width: 240px;
     height: 330px;
     overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: transform 0.3s ease;
-    margin: 0.2em;
+    border: 0;
+    background: none;
+    padding: 0;
 
     &:hover {
       transform: scale(1.05);
+      cursor: pointer;
     }
+  }
+
+  .character-item.selected::after {
+    content: "SELECTED";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 25%;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    font-size: small;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(0, 0, 0, 0.95)
+    );
+    pointer-events: none;
   }
 
   img {
@@ -26,14 +52,18 @@
   }
 }
 
+.selected {
+}
+
 .player-one-list,
 .player-two-list {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
-  width: fit-content;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  justify-content: center;
+  gap: 0.5em;
+  width: min(100%, calc(3 * 240px + 2 * 0.5em));
   margin: 0 auto;
+  align-content: start;
 }
 
 .player-one-list {
@@ -42,4 +72,37 @@
 
 .player-two-list {
   grid-area: player-two;
+}
+
+.setup {
+  display: grid;
+  grid-template-columns: 5fr 1fr 5fr;
+  justify-items: center;
+  margin-bottom: 1em;
+}
+
+.layout {
+  button {
+    background-color: #333333;
+    width: 10em;
+    height: 2.5em;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  input,
+  select {
+    width: 12em;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+    padding: 0;
+    margin: 5px;
+    text-align: center;
+  }
 }

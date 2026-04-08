@@ -1,17 +1,54 @@
 import { useState } from "react";
 import "./App.css";
 
+type Character = {
+  characterData: {
+    splashImage: {
+      url: string;
+    };
+  };
+};
+
+type UserResponse = {
+  characters: Character[];
+};
+
 export const App = () => {
   const [player1, setPlayer1] = useState("708629925");
   const [player2, setPlayer2] = useState("706992062");
-  const [game1, setGame1] = useState("");
-  const [game2, setGame2] = useState("");
+  const [game1, setGame1] = useState("genshin");
+  const [game2, setGame2] = useState("hsr");
+  const [characterList1, setCharacterList1] = useState<Character[]>([]);
+  const [characterList2, setCharacterList2] = useState<Character[]>([]);
+  const [selectedCharacter1, setSelectedCharacter1] =
+    useState<Character | null>(null);
+  const [selectedCharacter2, setSelectedCharacter2] =
+    useState<Character | null>(null);
+  const [selectedIndex1, setSelectedIndex1] = useState<number | null>(null);
+  const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null);
+
+  const handleSearch = async () => {
+    try {
+      const user1 = await fetchAccountData(game1, player1);
+      const user2 = await fetchAccountData(game2, player2);
+
+      setCharacterList1(user1.characters ?? []);
+      setCharacterList2(user2.characters ?? []);
+      setSelectedCharacter1(null);
+      setSelectedCharacter2(null);
+      setSelectedIndex1(null);
+      setSelectedIndex2(null);
+    } catch (error) {
+      console.error("Failed to load character data", error);
+    }
+  };
 
   return (
-    <>
-      <div className="layout">
-        <p>Genshin: 708629925 706312466</p>
-        <p>Honkai: 721512877 706992062</p>
+    <div className="layout">
+      <p>Genshin: 706312466 708629925 </p>
+      <p>Honkai: 706992062 721512877 714139221 712937819</p>
+
+      <div className="setup">
         <div className="player-one">
           Player 1
           <input
@@ -24,10 +61,13 @@ export const App = () => {
             <option value="genshin">Genshin Impact</option>
             <option value="hsr">Honkai: Star Rail</option>
             <option value="zzz" disabled>
-              Coming soon: Zenless Zone Zero
+              Zenless Zone Zero
             </option>
           </select>
         </div>
+        <button type="button" onClick={handleSearch}>
+          Search
+        </button>
         <div className="player-two">
           Player 2
           <input
@@ -40,47 +80,59 @@ export const App = () => {
             <option value="genshin">Genshin Impact</option>
             <option value="hsr">Honkai: Star Rail</option>
             <option value="zzz" disabled>
-              Coming soon: Zenless Zone Zero
+              Zenless Zone Zero
             </option>
           </select>
         </div>
-        <button
-          onClick={async () => {
-            for (let i = 0; i < 2; i++) {
-              // set game and uid based on player index
-              const game = i === 0 ? game1 : game2;
-              const uid = i === 0 ? player1 : player2;
+      </div>
 
-              const user = await fetchAccountData(game, uid);
+      <div className="character-list">
+        <div className="player-one-list">
+          {characterList1.map((character, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`character-item ${selectedIndex1 === index ? "selected" : ""}`}
+              onClick={() => {
+                setSelectedCharacter1(character);
+                setSelectedIndex1(index);
+              }}
+            >
+              <img
+                src={character.characterData.splashImage.url}
+                alt={`Player 1 character ${index + 1}`}
+              />
+            </button>
+          ))}
+        </div>
 
-              const list = document.querySelector(
-                i === 0 ? ".player-one-list" : ".player-two-list",
-              ) as HTMLDivElement;
-
-              list.innerHTML = "";
-
-              const characterList = user.characters;
-              for (let i = 0; i < characterList.length; i++) {
-                list.innerHTML += `
-                <div class="character-item">
-                  <img src="${user.characters[i].characterData.splashImage.url}" alt="Character Icon" />
-                </div>`;
-              }
-            }
-          }}
-        >
-          Search
-        </button>
-        <div className="character-list">
-          <div className="player-one-list"></div>
-          <div className="player-two-list"></div>
+        <div className="player-two-list">
+          {characterList2.map((character, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`character-item ${selectedIndex2 === index ? "selected" : ""}`}
+              onClick={() => {
+                setSelectedCharacter2(character);
+                setSelectedIndex2(index);
+              }}
+            >
+              <img
+                src={character.characterData.splashImage.url}
+                alt={`Player 2 character ${index + 1}`}
+              />
+            </button>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-async function fetchAccountData(game: string, uid: string) {
+async function fetchAccountData(
+  game: string,
+  uid: string,
+): Promise<UserResponse> {
   const res = await fetch(`http://localhost:4000/api/user/${game}/${uid}`);
   const user = await res.json();
   console.log(user);
